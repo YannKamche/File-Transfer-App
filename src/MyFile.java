@@ -1,5 +1,7 @@
 public class MyFile {
 
+    public String FileExtension;
+
     public int getId() {
     }
 

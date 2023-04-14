@@ -151,11 +151,11 @@ public static JFrame createFrame(String filename, byte[] filedata, String fileEx
     JLabel jlTitle = new JLabel("File Downloader");
     jlTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
     jlTitle.setFont(new Font("Arial", Font.BOLD, 25));
-    jlTitle.setBorder(new EmptyBorder(20, 0, 10, ));
+    jlTitle.setBorder(new EmptyBorder(20, 0, 10,0));
 
     JLabel jlprompt = new JLabel("Are You sure you want to download" + filename);
     jlprompt.setFont(new Font("Arial", Font.BOLD, 20));
-    jlprompt.setBorder(new EmptyBorder(20, 0, 10, ));
+    jlprompt.setBorder(new EmptyBorder(20, 0, 10,0));
     jlprompt.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JButton jbYes = new JButton("Yes");
