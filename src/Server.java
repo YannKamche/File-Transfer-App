@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,8 +17,8 @@ import java.util.ArrayList;
 public class Server {
     private static JFrame JFrame;
     static ArrayList<MyFile>myFiles= new ArrayList<>();
-
-    public static void main(String[]args){
+    static byte[] fileContentBytes;
+    public static void main(String[]args) throws IOException {
         int fileid = 0;
         JFrame jFrame = new JFrame("Server");
         jFrame.setSize(400, 400);
@@ -26,10 +27,10 @@ public class Server {
 
  JPanel jpanel = new JPanel();
         Container jPanel = null;
-        JPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
+        jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
 
         JScrollPane jScrollPane= new JScrollPane(jPanel);
-        JScrollPane.setVerticalScrollBar(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane.setVerticalScrollBarPolicy(jScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         JLabel jlTitle = new JLabel("File Receiver");
         jlTitle.setFont(new Font( "Arial", Font.BOLD,25 ));
@@ -53,26 +54,26 @@ public class Server {
                     dataInputStream.readFully(filenameBytes, 0, filenameBytes.length);
                     String filename = new String(filenameBytes);
 
+                    int fileContentlength = dataInputStream.readInt();
 
-                    if (filenamelength > 0) {
-                        int fileContentLength;
-                        byte[] fileContentBytes = new byte[fileContentLength];
-                        dataInputStream.readFully(fileContentBytes, 0, fileContentLength);
+                    if (fileContentlength > 0) {
 
+                       byte[] fileContentBytes = new byte[filenamelength];
+                        dataInputStream.readFully(fileContentBytes, 0, fileContentlength);
                         JPanel jpFileRow = new JPanel();
                         jpFileRow.setLayout(new BoxLayout(jpFileRow, BoxLayout.Y_AXIS));
 
-                        String fileName;
+                        String fileName = null;
                         JLabel jFileName = new JLabel(fileName);
                         jFileName.setFont(new Font("Arial", Font.BOLD, 20));
                         jFileName.setBorder(new EmptyBorder(10, 0, 10, 0));
 
-                        if (getFileExtension(filename).equalsIgnoreCase("txt")) ;
+                        if (getFileExtension(filename).equalsIgnoreCase("txt"))
                         {
                             jpFileRow.setName(String.valueOf(fileid));
                             jpFileRow.addMouseListener(getMyMouselistener());
 
-                            jpFileRow.add(jlFilename);
+                            jpFileRow.add(jFileName);
                             jPanel.add(jpFileRow);
                             jFrame.validate();
 
@@ -85,8 +86,12 @@ public class Server {
                             jPanel.add(jpFileRow);
 
                         }
+
+
+                        myFiles.add(new MyFile(fileid, filename,fileContentBytes,getFileExtensions(filename)));
+
                     }
-                    myFiles.add(new MyFile(fileid, filename,fileContentbytes,getFileExtensions(filename)));
+
 
                 }
         } catch (IOException error) {
@@ -95,7 +100,10 @@ public class Server {
         }
 }
 
+
     private static String getFileExtension(String filename) {
+
+        return filename;
     }
 
     public static MouseListener getMyMouselistener(){
@@ -171,15 +179,15 @@ public static JFrame createFrame(String filename, byte[] filedata, String fileEx
     jlFileContent.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     JPanel jpButton = new JPanel();
-    jpButton.setBorder(new EmptyBorder(20, 0, 10, ));
+    jpButton.setBorder(new EmptyBorder(20, 0, 10,0));
     jpButton.add(jbYes);
     jpButton.add(jbNo);
 
-    if (fileExtension.equalsIgnoreCase("txt")) ;
+    if (fileExtension.equalsIgnoreCase("txt"))
     {
-        jlFileContent.setIcon("<html>" + new String(fileData) + "</html>");
+        jlFileContent.setIcon("<html>" + new String(filedata) + "</html>");
     } else{
-        jlFileContent.setIcon(new ImageIcon(fileData));
+        jlFileContent.setIcon(new ImageIcon(filedata));
     }
     jbYes.addActionListener(new ActionListener() {
         @Override
@@ -188,7 +196,7 @@ public static JFrame createFrame(String filename, byte[] filedata, String fileEx
             try {
                 FileOutputStream fileOutputStream = new FileOutputStream(fileToDownload);
 
-                fileOutputStream.write(fileData);
+                fileOutputStream.write(filedata);
                 fileOutputStream.close();
 
                 jFrame.dispose();
@@ -217,11 +225,13 @@ public static  String getFileExtensions(String fileName){
     // would not work with .tor.gz
         int i= fileName.lastIndexOf(".");
 
-        if(i>0){
-            return fileName.substring(i+1);
+        if(i>0) {
+            return fileName.substring(i + 1);
+
+        }
             else{
                 return "No extension Found";
             }
-        }
+
     }
 }
