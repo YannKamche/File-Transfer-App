@@ -7,11 +7,14 @@ public class MyFile {
     public String FileExtension;
 
     public int getId() {
+        return 0;
     }
 
     public String getName() {
+        return null;
     }
 
     public byte[] getData() {
+        return new byte[0];
     }
 }

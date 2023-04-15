@@ -185,7 +185,7 @@ public static JFrame createFrame(String filename, byte[] filedata, String fileEx
 
     if (fileExtension.equalsIgnoreCase("txt"))
     {
-        jlFileContent.setIcon("<html>" + new String(filedata) + "</html>");
+        jlFileContent.setIcon( new ImageIcon(filedata));
     } else{
         jlFileContent.setIcon(new ImageIcon(filedata));
     }
